@@ -16,14 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::438424052683:role/GitHubActions-ECR-customer-pipeline
-          aws-region: eu-north-1
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -58,3 +50,30 @@ jobs:
         run: |
           docker push 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:${{ github.sha }}
           docker push 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:latest
+
+      - name: Download current ECS task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition kelechi-r-pipeline-task \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Update image in ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: r-pipeline
+          image: 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:${{ github.sha }}
+
+      - name: Deploy and run ECS task
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          cluster: kelechi-data-engineering-cluster
+          run-task: true
+          run-task-launch-type: FARGATE
+          run-task-subnets: subnet-0f2f36cc715c1d73d
+          run-task-security-groups: sg-0505d4b5eb5639ee1
+          run-task-assign-public-IP: ENABLED
+          wait-for-task-stopped: true
