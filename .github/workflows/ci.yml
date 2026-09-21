@@ -51,8 +51,10 @@ jobs:
 
       - name: Tag Docker image
         run: |
+          docker tag customer-pipeline:latest 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:${{ github.sha }}
           docker tag customer-pipeline:latest 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:latest
 
       - name: Push Docker image to ECR
         run: |
+          docker push 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:${{ github.sha }}
           docker push 438424052683.dkr.ecr.eu-north-1.amazonaws.com/kelechi-r-pipeline:latest
