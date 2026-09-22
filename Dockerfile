@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN R -e "install.packages(c('dplyr', 'DBI', 'RPostgres', 'paws.storage'), repos='https://cloud.r-project.org')"
+RUN R -e "install.packages(c('dplyr', 'DBI', 'RPostgres', 'paws.storage', 'readr'), repos='https://cloud.r-project.org')"
 
 RUN R -e "stopifnot(requireNamespace('paws.storage', quietly = TRUE))"
 

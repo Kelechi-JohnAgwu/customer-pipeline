@@ -12,6 +12,8 @@ library(paws.storage)
 #   password = "zikora"
 # )
 
+s3 <- s3()
+
 obj <- s3$get_object(
   Bucket = "kelechi-data-engineering-practice-2026",
   Key = "raw/customers.csv"
