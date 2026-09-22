@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN R -e "install.packages(c('dplyr', 'DBI', 'RPostgres', 'paws.storage'), repos='https://cloud.r-project.org')"
 
+RUN R -e "stopifnot(requireNamespace('paws.storage', quietly = TRUE))"
+
 COPY R/pipeline.R .
 
 CMD ["Rscript", "pipeline.R"]
