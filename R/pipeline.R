@@ -2,6 +2,7 @@ library(dplyr)
 library(DBI)
 library(RPostgres)
 library(paws.storage)
+library(readr)
 
 # docker_con <- dbConnect(
 #   RPostgres::Postgres(),
