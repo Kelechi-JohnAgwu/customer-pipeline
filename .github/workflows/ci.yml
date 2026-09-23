@@ -37,6 +37,10 @@ jobs:
         run: |
           Rscript -e 'renv::restore()'
 
+     - name: Check renv consistency
+       run: |
+          Rscript -e 'if (!renv::status()) quit(status = 1)'
+
       - name: Check R script
         run: |
           Rscript -e 'parse(file = "R/pipeline.R")'
