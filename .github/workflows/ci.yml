@@ -31,15 +31,24 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("DBI", "RPostgres", "glue"))'
+          Rscript -e 'install.packages(c("DBI", "RPostgres", "glue", "readr", "testthat"))'
 
       - name: Check R script
         run: |
           Rscript -e 'parse(file = "R/pipeline.R")'
 
+      - name: Run automated tests
+        run: |
+          Rscript -e 'testthat::test_dir("tests/testthat")'
+
       - name: Build Docker image
         run: |
           docker build -t customer-pipeline .
+
+      - name: Smoke test Docker image
+        run: |
+          docker run --rm customer-pipeline \
+            Rscript -e 'library(dplyr); library(DBI); library(RPostgres); library(paws.storage); library(readr)'
 
       - name: Tag Docker image
         run: |
