@@ -37,8 +37,8 @@ jobs:
         run: |
           Rscript -e 'renv::restore()'
 
-     - name: Check renv consistency
-       run: |
+      - name: Check renv consistency
+        run: |
           Rscript -e 'if (!renv::status()) quit(status = 1)'
 
       - name: Check R script
