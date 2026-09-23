@@ -48,7 +48,3 @@ print(dbGetQuery(
 dbDisconnect(docker_con)
 
 
-library(fs)
-
-
-file_create("functions.R")
