@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN R -e "install.packages('renv', repos='https://cloud.r-project.org')"
 
+RUN apt-get update && apt-get install -y \
+    cmake \
+    libx11-dev \
+    pandoc \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY renv.lock renv.lock
 
 RUN R -e "renv::restore()"
